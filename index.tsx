@@ -23,8 +23,10 @@ function main() {
         domain="pictocat-vib.us.auth0.com"
         clientId="Paj4KYinyLpTmKSUXYzcSZqU9AyATKG3"
         authorizationParams={{
-          // The redirect_uri is now handled by the SDK default, which is window.location.origin.
-          // This can resolve mismatches between the browser's URL and the Auth0 dashboard configuration.
+          // FIX: Explicitly set the redirect_uri to the current window origin.
+          // This resolves potential mismatches between the browser's URL and the Auth0 dashboard configuration,
+          // which can cause "Unable to issue redirect for OAuth 2.0 transaction" errors.
+          redirect_uri: window.location.origin,
           audience: `https://pictocat-vib.us.auth0.com/api/v2/`,
           scope: "openid profile email"
         }}
