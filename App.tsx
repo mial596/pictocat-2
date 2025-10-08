@@ -61,6 +61,7 @@ const App: React.FC = () => {
     const [newlyUnlockedImages, setNewlyUnlockedImages] = useState<CatImage[]>([]);
     const [openedEnvelopeName, setOpenedEnvelopeName] = useState('');
     const [toastMessage, setToastMessage] = useState('');
+    const [toastType, setToastType] = useState<'success' | 'error' | 'info'>('info');
     const [activeGameMode, setActiveGameMode] = useState<GameMode | null>(null);
 
     // Community State
@@ -68,6 +69,11 @@ const App: React.FC = () => {
     const [publicProfileData, setPublicProfileData] = useState<PublicProfileData | null>(null);
     const [profileError, setProfileError] = useState('');
     const [isProfileLoading, setIsProfileLoading] = useState(false);
+    
+    const showToast = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
+        setToastMessage(message);
+        setToastType(type);
+    };
 
     // Derived State
     const unlockedImages = useMemo(() => {
@@ -109,7 +115,7 @@ const App: React.FC = () => {
         } catch (error) {
             console.error("Failed to fetch initial data.", error);
             setInitError("No se pudieron cargar tus datos. Por favor, intenta refrescar la página o inicia sesión de nuevo.");
-            setToastMessage('Error al cargar datos iniciales.');
+            showToast('Error al cargar datos iniciales.', 'error');
         } finally {
             setIsAppLoading(false);
         }
@@ -169,7 +175,7 @@ const App: React.FC = () => {
             await api.saveUserData(token, data);
         } catch (error) {
             console.error("Failed to save user data", error);
-            setToastMessage("Error al guardar tu progreso.");
+            showToast("Error al guardar tu progreso.", 'error');
         }
     }, [getAccessTokenSilently]);
 
@@ -221,13 +227,13 @@ const App: React.FC = () => {
         const cost = envelope.baseCost + ((userProfile.data.playerStats.level - 1) * envelope.costIncreasePerLevel);
 
         if (userProfile.data.coins < cost) {
-            setToastMessage('¡No tienes suficientes monedas!');
+            showToast('¡No tienes suficientes monedas!', 'error');
             return;
         }
         const currentUnlockedIds = new Set(userProfile.data.unlockedImageIds);
         const lockedImages = catCatalog.filter(img => !currentUnlockedIds.has(img.id));
         if(lockedImages.length === 0) {
-            setToastMessage("¡Ya has desbloqueado todos los gatos!");
+            showToast("¡Ya has desbloqueado todos los gatos!", 'info');
             return;
         }
         const newImages: CatImage[] = [];
@@ -250,6 +256,7 @@ const App: React.FC = () => {
                     draft.playerStats.level += 1;
                     draft.playerStats.xp -= draft.playerStats.xpToNextLevel;
                     draft.playerStats.xpToNextLevel = Math.floor(draft.playerStats.xpToNextLevel * 1.5);
+                    showToast(`¡Subiste al nivel ${draft.playerStats.level}!`, 'success');
                 }
             });
             setNewlyUnlockedImages(newImages);
@@ -270,7 +277,7 @@ const App: React.FC = () => {
                 draft.coins -= upgrade.cost;
                 draft.purchasedUpgrades.push(upgrade.id as any);
             });
-            setToastMessage(`¡Mejora "${upgrade.name}" comprada!`);
+            showToast(`¡Mejora "${upgrade.name}" comprada!`, 'success');
         }
     };
     
@@ -327,7 +334,7 @@ const App: React.FC = () => {
         if (purchasedUpgrades.has('goldenPaw')) {
             finalCoins = Math.ceil(finalCoins * 1.5);
         }
-        setToastMessage(`¡Juego terminado! Ganaste ${finalCoins} monedas y ${results.xpEarned} XP.`);
+        showToast(`¡Ganaste ${finalCoins} monedas y ${results.xpEarned} XP!`, 'success');
         updateUserData(draft => {
             draft.coins += finalCoins;
             draft.playerStats.xp += results.xpEarned;
@@ -335,6 +342,7 @@ const App: React.FC = () => {
                 draft.playerStats.level += 1;
                 draft.playerStats.xp -= draft.playerStats.xpToNextLevel;
                 draft.playerStats.xpToNextLevel = Math.floor(draft.playerStats.xpToNextLevel * 1.5);
+                showToast(`¡Subiste al nivel ${draft.playerStats.level}!`, 'success');
             }
         });
         setActiveGameMode(null);
@@ -460,7 +468,7 @@ const App: React.FC = () => {
     }
 
     return (
-        <div className="flex flex-col min-h-screen bg-seasalt pt-20 pb-20 md:pb-0">
+        <div className="flex flex-col min-h-screen bg-seasalt pt-[80px] pb-20 md:pb-0">
             <Header
                 coins={userProfile.data.coins}
                 playerLevel={userProfile.data.playerStats.level}
@@ -514,7 +522,7 @@ const App: React.FC = () => {
                 unlockedImages={unlockedImages}
             />
             
-            {toastMessage && <Toast message={toastMessage} onClose={() => setToastMessage('')} />}
+            {toastMessage && <Toast message={toastMessage} type={toastType} onClose={() => setToastMessage('')} />}
         </div>
     );
 };

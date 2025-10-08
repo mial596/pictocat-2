@@ -39,10 +39,10 @@ const EnvelopeModal: React.FC<EnvelopeModalProps> = ({ isOpen, onClose, newImage
         <div className="relative z-10">
             <h2 className="text-2xl sm:text-3xl font-black text-liver mb-2">¡Has abierto un {envelopeName}!</h2>
             <p className="text-liver/80 mb-6">¡Nuevos gatos se unen a tu colección!</p>
-            <div className="overflow-y-auto max-h-[50vh] bg-wheat p-2 rounded-lg border-2 border-liver/30">
+            <div className="overflow-y-auto max-h-[50vh] bg-wheat/50 p-2 rounded-lg border-2 border-liver/20">
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 p-2">
                 {newImages.map((image, index) => (
-                  <div key={image.id} className="flex flex-col items-center animate-popIn" style={{ animationDelay: `${index * 100}ms` }}>
+                  <div key={image.id} className="flex flex-col items-center animate-popIn" style={{ animationDelay: `${index * 150}ms` }}>
                     <div className="bg-seasalt p-1 rounded-lg shadow-md aspect-square w-full border-2 border-liver/30">
                         <img src={image.url} alt={image.theme} className="w-full h-full object-cover rounded-md" />
                     </div>

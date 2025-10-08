@@ -38,19 +38,19 @@ const PhraseCard: React.FC<PhraseCardProps> = ({ phrase, image, onSelectImage, o
             <CatSilhouetteIcon className="w-full h-full text-wheat" />
         </div>
       )}
-      <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/90 via-black/60 to-transparent pointer-events-none"></div>
+      <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/90 via-black/70 to-transparent pointer-events-none"></div>
       <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
         <p className="font-bold text-lg drop-shadow-md text-center">{phrase.text}</p>
       </div>
       <button
         onClick={handleEditClick}
-        className="absolute top-2 right-2 bg-seasalt text-liver p-2 rounded-xl border-2 border-liver shadow-md opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-90 group-hover:scale-100 hover:bg-yellow-200"
+        className="absolute top-2 right-2 bg-seasalt/80 backdrop-blur-sm text-liver p-2 rounded-xl border-2 border-liver shadow-md opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-90 group-hover:scale-100 hover:bg-yellow-200"
         aria-label={`Editar ${phrase.isCustom ? 'frase' : 'imagen para'} ${phrase.text}`}
       >
         <EditIcon className="w-5 h-5" />
       </button>
        {phrase.isPublic && (
-        <div className="absolute top-2 left-2 bg-uranian_blue text-white p-1.5 rounded-full border-2 border-white/50" title="Esta frase es pública">
+        <div className="absolute top-2 left-2 bg-uranian_blue/80 backdrop-blur-sm text-white p-1.5 rounded-full border-2 border-white/50" title="Esta frase es pública">
           <GlobeIcon className="w-4 h-4" />
         </div>
       )}

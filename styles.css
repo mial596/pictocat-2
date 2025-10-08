@@ -22,29 +22,51 @@ body {
   background-color: var(--brand-seasalt);
   color: var(--brand-liver);
   font-weight: 500;
-  /* A cleaner background */
   background-image:
       linear-gradient(rgba(106, 74, 61, 0.04) 1px, transparent 1px),
       linear-gradient(to right, rgba(106, 74, 61, 0.04) 1px, transparent 1px);
   background-size: 1.5rem 1.5rem;
 }
 
+/* --- Glassmorphism UI Components --- */
+
+.glass-nav {
+    @apply fixed bg-seasalt/80 backdrop-blur-lg;
+    border-color: var(--brand-liver);
+}
+
+.modal-cartoon-overlay {
+    @apply fixed inset-0 flex items-center justify-center z-50 p-4;
+    background-color: rgba(106, 74, 61, 0.4);
+    backdrop-filter: blur(8px);
+    animation: modal-overlay-fade-in 0.3s ease-out forwards;
+}
+
+.modal-cartoon-content {
+    @apply w-full max-h-[90vh] flex flex-col bg-seasalt/80 backdrop-blur-xl;
+    border-radius: var(--radius-cartoon);
+    border: 1px solid rgba(106, 74, 61, 0.2);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+    animation: scale-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+
 /* --- Refined Cartoon Components --- */
 
 .btn-cartoon {
-    @apply font-bold rounded-xl transition-all duration-150 ease-in-out active:translate-y-px active:shadow-none;
+    @apply font-bold rounded-xl transition-all duration-200 ease-in-out active:translate-y-px active:shadow-none;
     color: var(--brand-liver);
     border: var(--border-cartoon);
     box-shadow: var(--shadow-cartoon);
     padding: 0.6rem 1.25rem;
 }
-.btn-cartoon:hover {
+.btn-cartoon:hover:not(:disabled) {
     box-shadow: var(--shadow-cartoon-hover);
     transform: translateY(-2px);
 }
 .btn-cartoon:disabled {
-    @apply bg-slate-300 text-slate-500 cursor-not-allowed border-slate-400;
-    box-shadow: 2px 2px 0px var(--brand-liver);
+    @apply bg-slate-200 text-slate-400 cursor-not-allowed border-slate-300;
+    box-shadow: 1px 1px 0px var(--brand-liver);
     transform: translateY(0);
 }
 
@@ -59,7 +81,7 @@ body {
     background-color: var(--brand-uranian-blue);
 }
 .btn-cartoon-secondary:hover:not(:disabled) {
-    background-color: #8ac9ec; /* a bit darker */
+    background-color: #8ac9ec;
 }
 
 .btn-cartoon-danger {
@@ -68,23 +90,6 @@ body {
 }
 .btn-cartoon-danger:hover:not(:disabled) {
     background-color: #dc2626; /* red-600 */
-}
-
-
-.modal-cartoon-overlay {
-    @apply fixed inset-0 flex items-center justify-center z-50 p-4;
-    background-color: rgba(106, 74, 61, 0.6); /* liver/60 */
-    backdrop-filter: blur(4px);
-    animation: modal-overlay-fade-in 0.2s ease-out forwards;
-}
-
-.modal-cartoon-content {
-    @apply w-full max-h-[90vh] flex flex-col;
-    background-color: var(--brand-seasalt);
-    border-radius: var(--radius-cartoon);
-    border: var(--border-cartoon);
-    box-shadow: 6px 6px 0px var(--brand-liver);
-    animation: bounce-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
 .input-cartoon {
@@ -96,24 +101,24 @@ body {
 .input-cartoon:focus {
     border-color: var(--brand-buff);
     box-shadow: inset 2px 2px 0px rgba(0,0,0,0.05);
-    --tw-ring-color: rgba(219, 170, 116, 0.4); /* buff/40 */
+    --tw-ring-color: rgba(219, 170, 116, 0.4);
 }
 
 .card-cartoon {
-    @apply rounded-xl transition-all duration-150 ease-in-out cursor-pointer;
+    @apply rounded-xl transition-all duration-200 ease-in-out cursor-pointer;
     border: var(--border-cartoon);
     box-shadow: var(--shadow-cartoon);
     background-color: var(--brand-seasalt);
 }
 .card-cartoon:hover {
     box-shadow: var(--shadow-cartoon-hover);
-    transform: translateY(-4px);
+    transform: translateY(-4px) scale(1.02);
 }
 
 .card-cartoon-add {
     @apply rounded-xl transition-all duration-150 ease-in-out cursor-pointer flex flex-col items-center justify-center gap-2;
     border: 2px dashed rgba(106, 74, 61, 0.4);
-    background-color: rgba(219, 170, 116, 0.1); /* buff/10 */
+    background-color: rgba(219, 170, 116, 0.1);
 }
 .card-cartoon-add:hover {
     border-color: var(--brand-buff);
@@ -122,38 +127,49 @@ body {
 
 /* --- New Bottom Nav Bar --- */
 .bottom-nav {
-    @apply fixed bottom-0 left-0 right-0 h-20 bg-seasalt/95 backdrop-blur-sm z-40 flex justify-around items-center;
-    border-top: 2px solid var(--brand-liver);
+    @apply fixed bottom-0 left-0 right-0 h-20 z-40 flex justify-around items-center glass-nav border-t-2;
 }
 .bottom-nav-item {
-    @apply flex flex-col items-center justify-center gap-1 text-liver/60 transition-colors duration-200;
+    @apply relative flex flex-col items-center justify-center gap-1 text-liver/60 transition-all duration-200;
 }
 .bottom-nav-item.active {
     @apply text-liver font-bold;
+    transform: translateY(-2px);
 }
 .bottom-nav-item.active .icon {
     color: var(--brand-buff);
 }
+.bottom-nav-item.active::after {
+    content: '';
+    @apply absolute -bottom-1 h-1 w-1 rounded-full bg-buff;
+}
 
+/* --- Toggle Switch --- */
+.toggle-switch {
+    @apply relative inline-flex items-center h-6 rounded-full w-11 cursor-pointer transition-colors;
+}
+.toggle-switch-handle {
+    @apply inline-block w-4 h-4 transform bg-white rounded-full transition-transform;
+}
 
 /* Animations */
 @keyframes modal-overlay-fade-in {
-  from { background-color: rgba(106, 74, 61, 0); backdrop-filter: blur(0px); }
-  to { background-color: rgba(106, 74, 61, 0.6); backdrop-filter: blur(4px); }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-@keyframes bounce-in {
-  0% { opacity: 0; transform: scale(0.5); }
-  100% { opacity: 1; transform: scale(1); }
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
 }
 
-@keyframes toast-slide-in {
+@keyframes slide-in-up {
   from { opacity: 0; transform: translate(-50%, 20px); }
   to { opacity: 1; transform: translate(-50%, 0); }
 }
 
 .toast-animation {
-    animation: toast-slide-in 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation: slide-in-up 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 @keyframes popIn {
@@ -164,19 +180,14 @@ body {
   animation: popIn 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
 }
 
-.perspective {
-  perspective: 1000px;
-}
-.transform-style-3d {
-  transform-style: preserve-3d;
-}
+/* 3D card flip for Memory Game */
+.perspective { perspective: 1000px; }
+.transform-style-3d { transform-style: preserve-3d; }
 .backface-hidden {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
-.rotate-y-180 {
-  transform: rotateY(180deg);
-}
+.rotate-y-180 { transform: rotateY(180deg); }
 
 /* Confetti animation for reward modal */
 @keyframes confetti-fall {
@@ -194,7 +205,6 @@ body {
   animation-iteration-count: infinite;
 }
 
-/* Specific component styles override */
 /* Header action buttons */
 .action-button {
     @apply flex items-center gap-2 font-bold px-3 rounded-xl transition-all h-10;

@@ -19,23 +19,32 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ 
     coins, playerLevel, playerXp, xpToNextLevel, 
     onNavigate,
-    currentUser, onLogout, isAdmin, activeView
+    onLogout, isAdmin, activeView
 }) => {
   const xpPercentage = xpToNextLevel > 0 ? (playerXp / xpToNextLevel) * 100 : 0;
-  const displayName = currentUser || '';
+  
+  const mainActiveViews = new Set(['main', 'admin']);
+  const gamesActiveViews = new Set(['games', 'gameplay']);
 
-  const navButtonClass = (view: ViewType) => 
-      `action-button ${activeView === view ? 'bg-buff' : 'bg-wheat'}`;
-
+  const getNavButtonClass = (view: ViewType) => {
+    let isActive = false;
+    if (view === 'main') isActive = mainActiveViews.has(activeView);
+    else if (view === 'games') isActive = gamesActiveViews.has(activeView);
+    else isActive = activeView === view;
+    
+    return `relative transition-colors duration-200 px-4 py-2 rounded-lg font-bold
+            ${isActive ? 'bg-wheat text-liver' : 'text-liver/70 hover:bg-wheat/50 hover:text-liver'}`;
+  };
+  
   return (
-    <header className="fixed top-0 left-0 right-0 bg-seasalt p-2 z-40 flex items-center justify-between text-liver font-bold border-b-2 border-liver">
+    <header className="glass-nav top-0 left-0 right-0 z-40 flex items-center justify-between p-2 border-b-2">
       {/* Left side: Logo, Level and XP */}
       <div className="flex items-center gap-3">
-        <button onClick={() => onNavigate('main')} className="flex items-center gap-2">
+        <button onClick={() => onNavigate('main')} className="flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-buff rounded-lg">
             <img src={LOGO_URL} alt="PictoCat Logo" className="w-12 h-12" />
         </button>
         <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center gap-1 bg-seasalt w-12 h-12 rounded-full border-2 border-liver">
+            <div className="flex items-center justify-center gap-1 bg-seasalt/80 w-12 h-12 rounded-full border-2 border-liver">
               <StarIcon className="w-6 h-6 text-yellow-400" />
               <span className="text-xl font-black">{playerLevel}</span>
             </div>
@@ -54,33 +63,33 @@ const Header: React.FC<HeaderProps> = ({
       {/* Right side: Actions, Coins, User */}
       <div className="flex items-center gap-2 sm:gap-4">
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-2">
-            <button onClick={() => onNavigate('main')} className={navButtonClass('main')}>
-                <EditIcon className="w-5 h-5" />
+        <div className="hidden md:flex items-center gap-2 bg-seasalt/60 p-1 rounded-xl border border-liver/20">
+            <button onClick={() => onNavigate('main')} className={getNavButtonClass('main')}>
+                <EditIcon className="w-5 h-5 inline-block mr-1 -mt-1" />
                 <span>Mis Frases</span>
             </button>
-            <button onClick={() => onNavigate('shop')} className={navButtonClass('shop')}>
-                <GiftIcon className="w-5 h-5" />
+            <button onClick={() => onNavigate('shop')} className={getNavButtonClass('shop')}>
+                <GiftIcon className="w-5 h-5 inline-block mr-1 -mt-1" />
                 <span>Tienda</span>
             </button>
-            <button onClick={() => onNavigate('games')} className={navButtonClass('games')}>
-                <GameIcon className="w-5 h-5" />
+            <button onClick={() => onNavigate('games')} className={getNavButtonClass('games')}>
+                <GameIcon className="w-5 h-5 inline-block mr-1 -mt-1" />
                 <span>Juegos</span>
             </button>
-             <button onClick={() => onNavigate('community')} className={navButtonClass('community')}>
-                <UsersIcon className="w-5 h-5" />
+             <button onClick={() => onNavigate('community')} className={getNavButtonClass('community')}>
+                <UsersIcon className="w-5 h-5 inline-block mr-1 -mt-1" />
                 <span>Comunidad</span>
             </button>
             {isAdmin && (
-                <button onClick={() => onNavigate('admin')} className={navButtonClass('admin')}>
-                    <AdminIcon className="w-5 h-5" />
+                <button onClick={() => onNavigate('admin')} className={getNavButtonClass('admin')}>
+                    <AdminIcon className="w-5 h-5 inline-block mr-1 -mt-1" />
                     <span>Admin</span>
                 </button>
             )}
         </div>
 
         <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2 bg-seasalt px-3 py-2 rounded-full h-10 border-2 border-liver">
+            <div className="flex items-center gap-2 bg-seasalt/80 px-3 py-2 rounded-full h-10 border-2 border-liver">
                 <CoinIcon className="w-6 h-6 text-yellow-500" />
                 <span className="text-lg">{coins}</span>
             </div>

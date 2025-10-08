@@ -2,6 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { CatImage, Phrase } from '../types.ts';
 import { CloseIcon, TrashIcon, GlobeIcon } from '../hooks/Icons.tsx';
 
+// A reusable, modern toggle switch component
+const ToggleSwitch: React.FC<{ checked: boolean; onChange: (checked: boolean) => void; }> = ({ checked, onChange }) => (
+    <button
+        type="button"
+        className={`toggle-switch ${checked ? 'bg-buff' : 'bg-liver/20'}`}
+        onClick={() => onChange(!checked)}
+        role="switch"
+        aria-checked={checked}
+    >
+        <span className={`toggle-switch-handle transform ${checked ? 'translate-x-5' : 'translate-x-1'}`} />
+    </button>
+);
+
+
 interface CustomPhraseModalProps {
     isOpen: boolean;
     onClose: () => void;
@@ -29,7 +43,6 @@ const CustomPhraseModal: React.FC<CustomPhraseModalProps> = ({
             setSelectedImageId(phraseToEdit.selectedImageId);
             setIsPublic(phraseToEdit.isPublic || false);
         } else {
-            // Reset for new phrase
             setText('');
             setSelectedImageId(null);
             setIsPublic(false);
@@ -53,7 +66,7 @@ const CustomPhraseModal: React.FC<CustomPhraseModalProps> = ({
     return (
         <div className="modal-cartoon-overlay">
             <div className="modal-cartoon-content p-4 sm:p-6 w-full max-w-2xl">
-                <header className="flex justify-between items-center mb-4 pb-4 border-b-2 border-liver/20">
+                <header className="flex justify-between items-center mb-4 pb-4 border-b-2 border-liver/10">
                     <h2 className="text-xl sm:text-2xl font-black text-liver">
                         {phraseToEdit ? 'Editar Frase' : 'Crear Nueva Frase'}
                     </h2>
@@ -75,16 +88,18 @@ const CustomPhraseModal: React.FC<CustomPhraseModalProps> = ({
                 </div>
 
                 <label className="block text-sm font-bold text-liver/80 mb-2">Elige una imagen</label>
-                <main className="flex-grow overflow-y-auto pr-2 border-2 border-liver/20 rounded-lg p-2 bg-wheat min-h-[200px]">
+                <main className="flex-grow overflow-y-auto pr-2 border-2 border-liver/10 rounded-lg p-2 bg-wheat/50 min-h-[200px]">
                     {unlockedImages.length > 0 ? (
                         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
                             {unlockedImages.map(image => (
                                 <button
                                     key={image.id}
                                     onClick={() => setSelectedImageId(image.id)}
-                                    className={`aspect-square rounded-lg overflow-hidden border-4 transition-all duration-200 ${selectedImageId === image.id ? 'border-buff ring-4 ring-buff/50 scale-105' : 'border-transparent hover:border-buff'}`}
+                                    className={`aspect-square rounded-lg overflow-hidden border-4 transition-all duration-200 group
+                                        ${selectedImageId === image.id ? 'border-buff ring-4 ring-buff/50 scale-105' : 'border-transparent hover:border-buff'}`
+                                    }
                                 >
-                                    <img src={image.url} alt={image.theme} className="w-full h-full object-cover" />
+                                    <img src={image.url} alt={image.theme} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
                                 </button>
                             ))}
                         </div>
@@ -95,20 +110,14 @@ const CustomPhraseModal: React.FC<CustomPhraseModalProps> = ({
                     )}
                 </main>
                 
-                 <div className="mt-4">
-                    <label htmlFor="is-public-checkbox" className="flex items-center gap-3 cursor-pointer p-2 rounded-md hover:bg-wheat transition-colors">
-                        <input
-                            id="is-public-checkbox"
-                            type="checkbox"
-                            checked={isPublic}
-                            onChange={(e) => setIsPublic(e.target.checked)}
-                            className="h-5 w-5 rounded border-gray-300 text-buff focus:ring-buff"
-                        />
+                 <div className="mt-4 flex items-center justify-between p-3 rounded-md bg-wheat/50 border border-liver/10">
+                    <label htmlFor="is-public-toggle" className="flex items-center gap-3 cursor-pointer">
                         <div className="flex items-center gap-2 text-liver">
                             <GlobeIcon className="w-5 h-5" />
                             <span className="font-medium">Publicar en mi perfil</span>
                         </div>
                     </label>
+                    <ToggleSwitch checked={isPublic} onChange={setIsPublic} />
                 </div>
 
 
