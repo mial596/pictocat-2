@@ -1,4 +1,4 @@
-import { GameMode } from './types';
+import { GameMode } from './types.ts';
 
 export const GAMES_DATA: Record<string, {name: string, description: string}> = {
   mouseHunt: { 

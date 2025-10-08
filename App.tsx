@@ -2,38 +2,38 @@ import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { useAuth0 } from '@auth0/auth0-react';
 
 // Components
-import Header from './hooks/Header';
-import PhraseCard from './components/PhraseCard';
-import FullDisplay from './components/FullDisplay';
-import ImageSelector from './components/ImageSelector';
-import ShopModal from './components/ShopModal';
-import EnvelopeModal from './components/EnvelopeModal';
-import Album from './components/Album';
-import CustomPhraseModal from './components/CustomPhraseModal';
-import GameModeSelector from './components/GameModeSelector';
-import MouseHuntGame from './components/MouseHuntGame';
-import CatMemoryGame from './components/CatMemoryGame';
-import SimonSaysGame from './components/SimonSaysGame';
-import CatTriviaGame from './components/CatTriviaGame';
-import FelineRhythmGame from './components/FelineRhythmGame';
-import Auth from './components/Auth';
-import Toast from './components/Toast';
-import AdminPanel from './components/AdminPanel';
-import UserSearch from './components/UserSearch';
-import PublicProfile from './components/PublicProfile';
-import { PlusIcon, CatSilhouetteIcon, SpinnerIcon } from './hooks/Icons';
+import Header from './hooks/Header.tsx';
+import PhraseCard from './components/PhraseCard.tsx';
+import FullDisplay from './components/FullDisplay.tsx';
+import ImageSelector from './components/ImageSelector.tsx';
+import ShopModal from './components/ShopModal.tsx';
+import EnvelopeModal from './components/EnvelopeModal.tsx';
+import Album from './components/Album.tsx';
+import CustomPhraseModal from './components/CustomPhraseModal.tsx';
+import GameModeSelector from './components/GameModeSelector.tsx';
+import MouseHuntGame from './components/MouseHuntGame.tsx';
+import CatMemoryGame from './components/CatMemoryGame.tsx';
+import SimonSaysGame from './components/SimonSaysGame.tsx';
+import CatTriviaGame from './components/CatTriviaGame.tsx';
+import FelineRhythmGame from './components/FelineRhythmGame.tsx';
+import Auth from './components/Auth.tsx';
+import Toast from './components/Toast.tsx';
+import AdminPanel from './components/AdminPanel.tsx';
+import UserSearch from './components/UserSearch.tsx';
+import PublicProfile from './components/PublicProfile.tsx';
+import { PlusIcon, CatSilhouetteIcon, SpinnerIcon } from './hooks/Icons.tsx';
 
 // Services
-import { speak, soundService } from './services/audioService';
-import * as api from './services/apiService';
-import { useDebounce } from './hooks/useDebounce';
+import { speak, soundService } from './services/audioService.ts';
+import * as api from './services/apiService.ts';
+import { useDebounce } from './hooks/useDebounce.ts';
 
 // Types
 import { 
   Phrase, CatImage, EnvelopeTypeId, UserProfile, UserData, GameMode, 
   CatMemoryMode, CatTriviaMode, FelineRhythmMode, PublicProfileData
-} from './types';
-import { ENVELOPES, UPGRADES } from './shopData';
+} from './types.ts';
+import { ENVELOPES, UPGRADES } from './shopData.ts';
 
 // Main App Component
 const App: React.FC = () => {

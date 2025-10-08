@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { CatImage } from '../types';
-import { CloseIcon, SearchIcon } from '../hooks/Icons';
+import { CatImage } from '../types.ts';
+import { CloseIcon, SearchIcon } from '../hooks/Icons.tsx';
 
 interface AlbumProps {
   isOpen: boolean;

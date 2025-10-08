@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Auth0Provider } from '@auth0/auth0-react';
 // FIX: Correct the import path to resolve the module not found error.
-import App from './App';
+import App from './App.tsx';
 
 /**
  * Initializes and renders the React application.

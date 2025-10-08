@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { CatMemoryMode, CatImage } from '../types';
-import { soundService } from '../services/audioService';
-import { CatSilhouetteIcon } from '../hooks/Icons';
+import { CatMemoryMode, CatImage } from '../types.ts';
+import { soundService } from '../services/audioService.ts';
+import { CatSilhouetteIcon } from '../hooks/Icons.tsx';
 
 interface CatMemoryGameProps {
   mode: CatMemoryMode;

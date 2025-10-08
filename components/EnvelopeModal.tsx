@@ -1,6 +1,6 @@
 import React from 'react';
-import { CatImage } from '../types';
-import { CloseIcon } from '../hooks/Icons';
+import { CatImage } from '../types.ts';
+import { CloseIcon } from '../hooks/Icons.tsx';
 
 const Confetti: React.FC = () => {
   const confettiCount = 70;

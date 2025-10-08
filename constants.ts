@@ -1,4 +1,4 @@
-import { Phrase } from './types';
+import { Phrase } from './types.ts';
 
 export const INITIAL_COINS = 500;
 export const ENVELOPE_COST = 100;

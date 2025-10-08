@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { MouseHuntMode } from '../types';
-import { MouseIcon } from '../hooks/Icons';
-import { soundService } from '../services/audioService';
+import { MouseHuntMode } from '../types.ts';
+import { MouseIcon } from '../hooks/Icons.tsx';
+import { soundService } from '../services/audioService.ts';
 
 interface MouseHuntGameProps {
   mode: MouseHuntMode;

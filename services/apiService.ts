@@ -1,4 +1,4 @@
-import { CatImage, UserData, UserProfile, AdminUserView, PublicPhrase, Phrase, SearchableUser, PublicProfileData } from '../types';
+import { CatImage, UserData, UserProfile, AdminUserView, PublicPhrase, Phrase, SearchableUser, PublicProfileData } from '../types.ts';
 
 const BASE_PATH = '/api';
 

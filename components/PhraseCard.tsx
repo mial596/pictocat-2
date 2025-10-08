@@ -1,6 +1,6 @@
 import React from 'react';
-import { Phrase, CatImage } from '../types';
-import { EditIcon, GlobeIcon, CatSilhouetteIcon } from '../hooks/Icons';
+import { Phrase, CatImage } from '../types.ts';
+import { EditIcon, GlobeIcon, CatSilhouetteIcon } from '../hooks/Icons.tsx';
 
 interface PhraseCardProps {
   phrase: Phrase;

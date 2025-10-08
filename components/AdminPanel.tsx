@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import * as apiService from '../services/apiService';
-import { AdminUserView, PublicPhrase } from '../types';
-import { SearchIcon, SpinnerIcon, TrashIcon, VerifiedIcon } from '../hooks/Icons';
+import * as apiService from '../services/apiService.ts';
+import { AdminUserView, PublicPhrase } from '../types.ts';
+import { SearchIcon, SpinnerIcon, TrashIcon, VerifiedIcon } from '../hooks/Icons.tsx';
 import { useAuth0 } from '@auth0/auth0-react';
 
 type AdminTab = 'users' | 'content';

@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from 'react';
-import { useDebounce } from '../hooks/useDebounce';
-import * as apiService from '../services/apiService';
-import { SearchableUser } from '../types';
-import { SearchIcon, SpinnerIcon, VerifiedIcon, UsersIcon } from '../hooks/Icons';
+import { useDebounce } from '../hooks/useDebounce.ts';
+import * as apiService from '../services/apiService.ts';
+import { SearchableUser } from '../types.ts';
+import { SearchIcon, SpinnerIcon, VerifiedIcon, UsersIcon } from '../hooks/Icons.tsx';
 import { useAuth0 } from '@auth0/auth0-react';
 
 interface UserSearchProps {

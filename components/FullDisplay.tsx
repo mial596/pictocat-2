@@ -1,6 +1,6 @@
 import React from 'react';
-import { CatImage, Phrase } from '../types';
-import { CatSilhouetteIcon, CloseIcon } from '../hooks/Icons';
+import { CatImage, Phrase } from '../types.ts';
+import { CatSilhouetteIcon, CloseIcon } from '../hooks/Icons.tsx';
 
 interface FullDisplayProps {
   phrase: Phrase | null;

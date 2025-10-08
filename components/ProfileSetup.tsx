@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { SpinnerIcon } from '../hooks/Icons';
-import * as apiService from '../services/apiService';
-import { UserProfile } from '../types';
-import { LOGO_URL } from '../constants';
+import { SpinnerIcon } from '../hooks/Icons.tsx';
+import * as apiService from '../services/apiService.ts';
+import { UserProfile } from '../types.ts';
+import { LOGO_URL } from '../constants.ts';
 import { useAuth0 } from '@auth0/auth0-react';
 
 interface ProfileSetupProps {

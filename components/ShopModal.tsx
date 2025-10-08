@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Envelope, EnvelopeTypeId, PlayerStats, UpgradeId } from '../types';
-import { CloseIcon, CoinIcon, EnvelopeIcon, LockIcon, MouseIcon, TimeIcon, StarIcon } from '../hooks/Icons';
-import { ENVELOPES, UPGRADES, calculateEnvelopeCost } from '../shopData';
+import { Envelope, EnvelopeTypeId, PlayerStats, UpgradeId } from '../types.ts';
+import { CloseIcon, CoinIcon, EnvelopeIcon, LockIcon, MouseIcon, TimeIcon, StarIcon } from '../hooks/Icons.tsx';
+import { ENVELOPES, UPGRADES, calculateEnvelopeCost } from '../shopData.ts';
 
 interface ShopModalProps {
   isOpen: boolean;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { CoinIcon, GameIcon, GiftIcon, StarIcon, AdminIcon, UsersIcon, EditIcon } from './Icons';
+import { CoinIcon, GameIcon, GiftIcon, StarIcon, AdminIcon, UsersIcon, EditIcon } from './Icons.tsx';
 
 interface HeaderProps {
   coins: number;

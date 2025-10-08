@@ -1,6 +1,6 @@
 import React from 'react';
-import { PublicProfileData } from '../types';
-import { ArrowLeftIcon, CatSilhouetteIcon, SpinnerIcon, VerifiedIcon } from '../hooks/Icons';
+import { PublicProfileData } from '../types.ts';
+import { ArrowLeftIcon, CatSilhouetteIcon, SpinnerIcon, VerifiedIcon } from '../hooks/Icons.tsx';
 
 interface PublicProfileProps {
     profileData: PublicProfileData | null;

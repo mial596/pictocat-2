@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { FelineRhythmMode } from '../types';
-import { soundService } from '../services/audioService';
-import { MusicNoteIcon } from '../hooks/Icons';
+import { FelineRhythmMode } from '../types.ts';
+import { soundService } from '../services/audioService.ts';
+import { MusicNoteIcon } from '../hooks/Icons.tsx';
 
 interface FelineRhythmGameProps {
   mode: FelineRhythmMode;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { GameMode, CatMemoryMode, CatTriviaMode } from '../types';
-import { ArrowLeftIcon, CloseIcon, LockIcon, MouseIcon, BrainIcon, QuestionMarkIcon, CatSilhouetteIcon } from '../hooks/Icons';
-import { GAMES_DATA, GAME_MODES } from '../gameData';
+import { GameMode, CatMemoryMode, CatTriviaMode } from '../types.ts';
+import { ArrowLeftIcon, CloseIcon, LockIcon, MouseIcon, BrainIcon, QuestionMarkIcon, CatSilhouetteIcon } from '../hooks/Icons.tsx';
+import { GAMES_DATA, GAME_MODES } from '../gameData.ts';
 
 interface GameModeSelectorProps {
   isOpen: boolean;

@@ -1,6 +1,6 @@
 import React from 'react';
-import { CatImage, Phrase } from '../types';
-import { CloseIcon } from '../hooks/Icons';
+import { CatImage, Phrase } from '../types.ts';
+import { CloseIcon } from '../hooks/Icons.tsx';
 
 interface ImageSelectorProps {
   isOpen: boolean;

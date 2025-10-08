@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import { LOGO_URL } from '../constants';
+import { LOGO_URL } from '../constants.ts';
 
 const Auth: React.FC = () => {
   const { loginWithRedirect } = useAuth0();

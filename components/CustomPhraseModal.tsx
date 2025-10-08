@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { CatImage, Phrase } from '../types';
-import { CloseIcon, TrashIcon, GlobeIcon } from '../hooks/Icons';
+import { CatImage, Phrase } from '../types.ts';
+import { CloseIcon, TrashIcon, GlobeIcon } from '../hooks/Icons.tsx';
 
 interface CustomPhraseModalProps {
     isOpen: boolean;

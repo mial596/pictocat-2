@@ -1,4 +1,4 @@
-import { Envelope, EnvelopeTypeId, GameUpgrade } from './types';
+import { Envelope, EnvelopeTypeId, GameUpgrade } from './types.ts';
 
 export const ENVELOPES: Record<EnvelopeTypeId, Envelope> = {
   bronze: {

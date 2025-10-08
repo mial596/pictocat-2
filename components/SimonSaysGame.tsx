@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { SimonSaysMode } from '../types';
-import { soundService } from '../services/audioService';
-import { CatSilhouetteIcon } from '../hooks/Icons';
+import { SimonSaysMode } from '../types.ts';
+import { soundService } from '../services/audioService.ts';
+import { CatSilhouetteIcon } from '../hooks/Icons.tsx';
 
 interface SimonSaysGameProps {
   mode: SimonSaysMode;

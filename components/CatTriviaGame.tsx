@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { CatTriviaMode, CatImage } from '../types';
-import { soundService } from '../services/audioService';
+import { CatTriviaMode, CatImage } from '../types.ts';
+import { soundService } from '../services/audioService.ts';
 
 interface CatTriviaGameProps {
   mode: CatTriviaMode;
