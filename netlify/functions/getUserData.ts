@@ -22,13 +22,12 @@ export const handler: Handler = async (event, context: HandlerContext) => {
     if (!userFromDb) {
       console.log(`Profile not found for user ${user.sub}. Attempting JIT creation.`);
       
-      if (!user.email) {
-        throw new Error(`Cannot create profile JIT: user object for ${user.sub} is missing an email address.`);
-      }
-
+      // FIX: If the email is missing from the Netlify Identity user object, create a placeholder.
+      const userEmail = user.email || `${user.sub.replace('|', '_')}@pictocat.local`;
+      
       const initialData = getInitialUserData();
       
-      const baseUsername = `@${user.email.split('@')[0].replace(/[^a-zA-Z0-9_]/g, '').slice(0, 20)}`;
+      const baseUsername = `@${userEmail.split('@')[0].replace(/[^a-zA-Z0-9_]/g, '').slice(0, 20)}`;
       let finalUsername = baseUsername;
       
       let usernameCheck = await usersCollection.findOne({ username: finalUsername });
@@ -41,7 +40,7 @@ export const handler: Handler = async (event, context: HandlerContext) => {
       const newUserDoc = {
         _id: user.sub,
         username: finalUsername,
-        email: user.email,
+        email: userEmail,
         role: 'user',
         isVerified: true,
         ...initialData

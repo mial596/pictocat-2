@@ -18,10 +18,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const usersCollection = db.collection('users');
     let userFromDb = await usersCollection.findOne({ _id: userId });
 
-    const userEmail = decodedToken.email;
-    if (!userEmail) {
-      throw new Error(`Cannot process profile: user token for ${userId} is missing an email claim.`);
-    }
+    // FIX: If the email claim is missing from the token, create a placeholder to prevent JIT creation from failing.
+    // The user can update this later if a profile editing feature is added.
+    const userEmail = decodedToken.email || `${userId.replace('|', '_')}@pictocat.local`;
 
     // Assign admin role if the user's email matches the ADMIN_EMAIL environment variable.
     const isAdmin = process.env.ADMIN_EMAIL && userEmail === process.env.ADMIN_EMAIL;
