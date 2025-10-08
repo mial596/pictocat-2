@@ -34,7 +34,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const usersCollection = db.collection('users');
 
     // Using $set to update only the whitelisted fields in the user document.
-    await usersCollection.updateOne({ _id: userId }, { $set: dataToSave });
+    // FIX: Cast `userId` to `any` to bypass TypeScript type error.
+    // The driver expects an ObjectId, but the application uses string IDs from the auth provider.
+    await usersCollection.updateOne({ _id: userId as any }, { $set: dataToSave });
 
     return res.status(200).json({ success: true });
   } catch (error) {

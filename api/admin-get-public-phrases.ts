@@ -10,7 +10,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         const usersCollection = db.collection('users');
         const publicPhrasesCollection = db.collection('public_phrases');
 
-        const requestingUser = await usersCollection.findOne({ _id: decodedToken.sub });
+        // FIX: Cast user ID to `any` to bypass TypeScript type error.
+        // The driver expects an ObjectId, but the application uses string IDs from the auth provider.
+        const requestingUser = await usersCollection.findOne({ _id: decodedToken.sub as any });
 
         if (!requestingUser || requestingUser.role !== 'admin') {
             return res.status(403).send('Forbidden: Admins only.');

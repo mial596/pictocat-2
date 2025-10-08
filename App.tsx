@@ -82,6 +82,11 @@ const App: React.FC = () => {
     
     const purchasedUpgrades = useMemo(() => new Set(userProfile?.data.purchasedUpgrades || []), [userProfile]);
 
+    const handleLogout = () => {
+        console.log("Logout triggered. Redirecting to Auth0 to clear session.");
+        logout({ logoutParams: { returnTo: window.location.origin } });
+    };
+
     const fetchInitialData = useCallback(async () => {
         if (!isAuthenticated) {
             setIsAppLoading(false);
@@ -376,7 +381,7 @@ const App: React.FC = () => {
                 <h1 className="text-2xl font-bold text-liver mb-4">¡Oops! Algo salió mal</h1>
                 <p className="text-liver/80 mb-6 max-w-md">{initError}</p>
                 <button
-                    onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
+                    onClick={handleLogout}
                     className="btn-cartoon btn-cartoon-danger"
                 >
                     Cerrar Sesión
@@ -475,7 +480,7 @@ const App: React.FC = () => {
                 onOpenCommunity={() => { setActiveView('community'); handleBackToSearch(); setActiveModal(null); }}
                 onGoToMain={() => setActiveView('main')}
                 currentUser={userProfile.email}
-                onLogout={() => logout({ logoutParams: { returnTo: window.location.origin } })}
+                onLogout={handleLogout}
                 isAdmin={userProfile.role === 'admin'}
                 activeView={activeView}
             />

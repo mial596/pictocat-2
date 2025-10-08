@@ -7,22 +7,37 @@ let cachedClient: MongoClient | null = null;
 let cachedDb: Db | null = null;
 
 export async function getDb(): Promise<Db> {
+  console.log("Attempting to connect to the database...");
+
   const uri = process.env.PICTOCAT1_MONGODB_URI;
   if (!uri) {
-    throw new Error('Please define the PICTOCAT1_MONGODB_URI environment variable');
+    console.error("PICTOCAT1_MONGODB_URI environment variable is not set.");
+    throw new Error('Database connection string is missing.');
   }
 
   if (cachedClient && cachedDb) {
+    console.log("Using cached database connection.");
     return cachedDb;
   }
 
+  console.log("Creating new MongoDB client...");
   const client = new MongoClient(uri);
-  cachedClient = client;
 
-  await client.connect();
-  
-  const db = client.db('pictocat1'); // Or specify your database name
-  cachedDb = db;
-  
-  return db;
+  try {
+    await client.connect();
+    console.log("MongoDB client connected successfully.");
+
+    const db = client.db('pictocat1'); // Or specify your database name
+    cachedClient = client;
+    cachedDb = db;
+
+    console.log("Database connection established.");
+    return db;
+  } catch (error) {
+    console.error("Failed to connect to MongoDB:", error);
+    // Important: Don't cache a failed client attempt.
+    cachedClient = null;
+    cachedDb = null;
+    throw new Error("Could not connect to the database.");
+  }
 }

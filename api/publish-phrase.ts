@@ -23,7 +23,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         // Step 1: Update the public_phrases collection
         if (isPublic) {
-            const user = await usersCollection.findOne({ _id: userId }, { projection: { username: 1 }});
+            // FIX: Cast `userId` to `any` to bypass TypeScript type error.
+            // The driver expects an ObjectId, but the application uses string IDs from the auth provider.
+            const user = await usersCollection.findOne({ _id: userId as any }, { projection: { username: 1 }});
             if (!user) {
                 return res.status(404).send('User not found.');
             }
@@ -47,7 +49,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         // Step 2: Update the isPublic flag within the user's data
         await usersCollection.updateOne(
-            { _id: userId, 'phrases.id': phrase.id },
+            // FIX: Cast `userId` to `any` to bypass TypeScript type error.
+            // The driver expects an ObjectId, but the application uses string IDs from the auth provider.
+            { _id: userId as any, 'phrases.id': phrase.id },
             { $set: { 'phrases.$.isPublic': isPublic } }
         );
 

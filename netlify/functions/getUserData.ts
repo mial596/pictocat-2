@@ -51,7 +51,9 @@ export const handler: Handler = async (event, context: HandlerContext) => {
     }
     
     const userProfile: UserProfile = {
-      id: userFromDb._id,
+      // FIX: Cast `_id` to string to match the UserProfile type.
+      // The MongoDB driver's default typing assumes ObjectId, but we store string IDs.
+      id: String(userFromDb._id),
       email: userFromDb.username,
       role: userFromDb.role || 'user',
       isVerified: userFromDb.isVerified || false,

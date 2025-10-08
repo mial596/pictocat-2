@@ -9,14 +9,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') {
     return res.status(405).send('Method Not Allowed');
   }
+
+  console.log("getUserData function started.");
+
+  let decodedToken;
+  try {
+    decodedToken = await verifyToken(req.headers.authorization);
+    console.log(`Token verified for user: ${decodedToken.sub}`);
+  } catch (error) {
+    console.error('Token verification failed:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown auth error';
+    return res.status(401).json({ message: 'Unauthorized: ' + errorMessage });
+  }
   
   try {
-    const decodedToken = await verifyToken(req.headers.authorization);
     const userId = decodedToken.sub;
     
     const db = await getDb();
     const usersCollection = db.collection('users');
-    let userFromDb = await usersCollection.findOne({ _id: userId });
+    console.log(`Database connection successful. Querying for user: ${userId}`);
+    let userFromDb = await usersCollection.findOne({ _id: userId as any });
 
     // FIX: If the email claim is missing from the token, create a placeholder to prevent JIT creation from failing.
     // The user can update this later if a profile editing feature is added.
@@ -39,6 +51,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         finalUsername = `${baseUsername.slice(0, 20)}${suffix}`;
         usernameCheck = await usersCollection.findOne({ username: finalUsername });
       }
+      console.log(`Generated new username: ${finalUsername}`);
 
       const newUserDoc = {
         _id: userId,
@@ -50,19 +63,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       };
       
       await usersCollection.insertOne(newUserDoc);
+      console.log(`New user document inserted for ${userId}.`);
       userFromDb = newUserDoc;
     } else {
+        console.log(`Found existing profile for user ${userId}.`);
         // For existing users, check if their role needs to be promoted to admin.
         // This allows promoting a user without manual DB edits.
         if (isAdmin && userFromDb.role !== 'admin') {
-            await usersCollection.updateOne({ _id: userId }, { $set: { role: 'admin' } });
+            await usersCollection.updateOne({ _id: userId as any }, { $set: { role: 'admin' } });
             userFromDb.role = 'admin'; // Update in-memory object for the current response
+            console.log(`Promoted user ${userId} to admin.`);
         }
     }
     
     // Reconstruct the nested 'data' object for the frontend
     const userProfile: UserProfile = {
-      id: userFromDb._id,
+      // FIX: Cast `_id` to string to match the UserProfile type.
+      // The MongoDB driver's default typing assumes ObjectId, but we store string IDs.
+      id: String(userFromDb._id),
       email: userFromDb.username, // Frontend uses 'email' field for the username
       role: userFromDb.role || 'user',
       isVerified: userFromDb.isVerified || false,
@@ -75,14 +93,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
     };
 
+    console.log("Successfully prepared user profile. Sending response.");
     return res.status(200).json(userProfile);
 
   } catch (error) {
-    console.error('Get/Create user data error:', error);
-    if (error instanceof Error && (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError')) {
-      return res.status(401).json({ message: 'Unauthorized' });
-    }
+    console.error('Error during database operation in getUserData:', error);
     const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-    return res.status(500).json({ message: 'Internal Server Error', error: errorMessage });
+    return res.status(500).json({ message: 'Internal Server Error: ' + errorMessage });
   }
 }
