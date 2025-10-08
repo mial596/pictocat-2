@@ -1,5 +1,5 @@
 // api/_utils/auth.ts
-import { verify, JwtHeader, SigningKeyCallback } from 'jsonwebtoken';
+import jwt, { JwtHeader, SigningKeyCallback } from 'jsonwebtoken';
 import jwksClient from 'jwks-rsa';
 
 const client = jwksClient({
@@ -46,7 +46,7 @@ export const verifyToken = (authorizationHeader?: string): Promise<DecodedToken>
     }
     
     // The audience and issuer must exactly match the configuration in your Auth0 API settings.
-    verify(token, getKey, {
+    jwt.verify(token, getKey, {
       audience: `https://pictocat-vib.us.auth0.com/api/v2/`,
       issuer: `https://pictocat-vib.us.auth0.com/`,
       algorithms: ['RS256']
