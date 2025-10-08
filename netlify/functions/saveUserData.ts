@@ -1,6 +1,6 @@
 // netlify/functions/saveUserData.ts
 import { Handler, HandlerContext } from '@netlify/functions';
-import getDb from './db.ts';
+import getDb from './db.js';
 
 export const handler: Handler = async (event, context: HandlerContext) => {
   if (event.httpMethod !== 'POST') {

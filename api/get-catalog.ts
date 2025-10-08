@@ -1,6 +1,6 @@
 // api/get-catalog.ts
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { getDb } from './_utils/mongodb.ts';
+import { getDb } from './_utils/mongodb.js';
 import { CatImage } from '../types.ts';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {

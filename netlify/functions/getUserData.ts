@@ -1,7 +1,7 @@
 // netlify/functions/getUserData.ts
 import { Handler, HandlerContext } from '@netlify/functions';
-import getDb from './db.ts';
-import { getInitialUserData } from './_shared/data.ts';
+import getDb from './db.js';
+import { getInitialUserData } from './_shared/data.js';
 import { UserProfile } from '../../types.ts';
 
 export const handler: Handler = async (event, context: HandlerContext) => {

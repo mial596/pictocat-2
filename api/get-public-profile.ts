@@ -1,7 +1,7 @@
 // api/get-public-profile.ts
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { getDb } from './_utils/mongodb.ts';
-import { verifyToken } from './_utils/auth.ts';
+import { getDb } from './_utils/mongodb.js';
+import { verifyToken } from './_utils/auth.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {

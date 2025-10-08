@@ -1,7 +1,7 @@
 // api/saveUserData.ts
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { getDb } from './_utils/mongodb.ts';
-import { verifyToken } from './_utils/auth.ts';
+import { getDb } from './_utils/mongodb.js';
+import { verifyToken } from './_utils/auth.js';
 import { UserData } from '../types.ts';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {

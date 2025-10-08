@@ -1,7 +1,7 @@
 // netlify/functions/seed-database.ts
 import { Handler } from '@netlify/functions';
-import getDb from './db.ts';
-import { MASTER_IMAGE_CATALOG_DATA } from './_shared/catalog-data.ts';
+import getDb from './db.js';
+import { MASTER_IMAGE_CATALOG_DATA } from './_shared/catalog-data.js';
 
 interface CatImageSeed {
   id: string;
