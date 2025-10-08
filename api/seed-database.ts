@@ -14,18 +14,30 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const db = await getDb();
     const catsCollection = db.collection('cats');
 
+    // Find the highest existing numeric_id to ensure new IDs are unique and sequential.
+    const lastCat = await catsCollection.find({ numeric_id: { $exists: true, $type: 'number' } }).sort({ numeric_id: -1 }).limit(1).toArray();
+    let maxId = 0;
+    if (lastCat.length > 0) {
+        maxId = lastCat[0].numeric_id;
+    }
+
     const allCatsFromSource: CatImageSeed[] = (Object.values(MASTER_IMAGE_CATALOG_DATA) as CatImageSeed[][]).flat();
 
     const existingCatsCursor = catsCollection.find({}, { projection: { original_id: 1 } });
     const existingIds = new Set((await existingCatsCursor.toArray()).map(doc => doc.original_id));
 
+    let currentId = maxId;
     const catsToInsert = allCatsFromSource
         .filter(cat => !existingIds.has(cat.id))
-        .map(cat => ({
-            original_id: cat.id,
-            url: cat.url,
-            theme: cat.theme
-        }));
+        .map(cat => {
+            currentId++;
+            return {
+                original_id: cat.id,
+                url: cat.url,
+                theme: cat.theme,
+                numeric_id: currentId // Add the new stable numeric ID
+            };
+        });
 
     if (catsToInsert.length === 0) {
       const count = await catsCollection.countDocuments();

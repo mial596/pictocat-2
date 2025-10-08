@@ -1,15 +1,17 @@
 // api/_utils/mongodb.ts
 import { MongoClient, Db } from 'mongodb';
 
-const uri = process.env.PICTOCAT1_MONGODB_URI;
-if (!uri) {
-  throw new Error('Please define the PICTOCAT1_MONGODB_URI environment variable');
-}
-
+// The MongoDB connection string is retrieved from environment variables.
+// This is a critical piece of configuration for the application to function.
 let cachedClient: MongoClient | null = null;
 let cachedDb: Db | null = null;
 
 export async function getDb(): Promise<Db> {
+  const uri = process.env.PICTOCAT1_MONGODB_URI;
+  if (!uri) {
+    throw new Error('Please define the PICTOCAT1_MONGODB_URI environment variable');
+  }
+
   if (cachedClient && cachedDb) {
     return cachedDb;
   }

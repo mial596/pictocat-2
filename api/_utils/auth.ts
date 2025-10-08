@@ -4,7 +4,7 @@ import jwksClient from 'jwks-rsa';
 
 const client = jwksClient({
   // This URL is dynamically constructed from environment variables
-  // for security and flexibility.
+  // for security and flexibility. It must match your Auth0 application's settings.
   jwksUri: `https://pictocat-vib.us.auth0.com/.well-known/jwks.json`
 });
 
@@ -45,6 +45,7 @@ export const verifyToken = (authorizationHeader?: string): Promise<DecodedToken>
       return reject(new Error('Bearer token not found.'));
     }
     
+    // The audience and issuer must exactly match the configuration in your Auth0 API settings.
     verify(token, getKey, {
       audience: `https://pictocat-vib.us.auth0.com/api/v2/`,
       issuer: `https://pictocat-vib.us.auth0.com/`,

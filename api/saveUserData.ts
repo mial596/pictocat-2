@@ -2,6 +2,7 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { getDb } from './_utils/mongodb';
 import { verifyToken } from './_utils/auth';
+import { UserData } from '../types';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
@@ -11,17 +12,29 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const decodedToken = await verifyToken(req.headers.authorization);
     const userId = decodedToken.sub;
-    const { data } = req.body || {};
+    const receivedData = req.body?.data;
 
-    if (!data) {
-      return res.status(400).send('User data is required');
+    if (!receivedData) {
+      return res.status(400).send('User data is required in the `data` field.');
+    }
+
+    // Whitelist the fields that can be updated to prevent overwriting protected fields like 'role'.
+    const dataToSave: Partial<UserData> = {};
+    if (receivedData.coins !== undefined) dataToSave.coins = receivedData.coins;
+    if (receivedData.phrases !== undefined) dataToSave.phrases = receivedData.phrases;
+    if (receivedData.unlockedImageIds !== undefined) dataToSave.unlockedImageIds = receivedData.unlockedImageIds;
+    if (receivedData.playerStats !== undefined) dataToSave.playerStats = receivedData.playerStats;
+    if (receivedData.purchasedUpgrades !== undefined) dataToSave.purchasedUpgrades = receivedData.purchasedUpgrades;
+    
+    if (Object.keys(dataToSave).length === 0) {
+        return res.status(400).send('No valid user data fields provided for update.');
     }
 
     const db = await getDb();
     const usersCollection = db.collection('users');
 
-    // Using $set to update fields in the user document
-    await usersCollection.updateOne({ _id: userId }, { $set: data });
+    // Using $set to update only the whitelisted fields in the user document.
+    await usersCollection.updateOne({ _id: userId }, { $set: dataToSave });
 
     return res.status(200).json({ success: true });
   } catch (error) {

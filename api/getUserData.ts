@@ -18,14 +18,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const usersCollection = db.collection('users');
     let userFromDb = await usersCollection.findOne({ _id: userId });
 
+    const userEmail = decodedToken.email;
+    if (!userEmail) {
+      throw new Error(`Cannot process profile: user token for ${userId} is missing an email claim.`);
+    }
+
+    // Assign admin role if the user's email matches the ADMIN_EMAIL environment variable.
+    const isAdmin = process.env.ADMIN_EMAIL && userEmail === process.env.ADMIN_EMAIL;
+
     if (!userFromDb) {
       console.log(`Profile not found for user ${userId}. Attempting JIT creation.`);
       
-      const userEmail = decodedToken.email;
-      if (!userEmail) {
-        throw new Error(`Cannot create profile JIT: user token for ${userId} is missing an email claim.`);
-      }
-
       const initialData = getInitialUserData();
       
       const baseUsername = `@${userEmail.split('@')[0].replace(/[^a-zA-Z0-9_]/g, '').slice(0, 20)}`;
@@ -42,13 +45,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         _id: userId,
         username: finalUsername,
         email: userEmail,
-        role: 'user',
+        role: isAdmin ? 'admin' : 'user', // Set role on creation
         isVerified: true,
         ...initialData
       };
       
       await usersCollection.insertOne(newUserDoc);
       userFromDb = newUserDoc;
+    } else {
+        // For existing users, check if their role needs to be promoted to admin.
+        // This allows promoting a user without manual DB edits.
+        if (isAdmin && userFromDb.role !== 'admin') {
+            await usersCollection.updateOne({ _id: userId }, { $set: { role: 'admin' } });
+            userFromDb.role = 'admin'; // Update in-memory object for the current response
+        }
     }
     
     // Reconstruct the nested 'data' object for the frontend

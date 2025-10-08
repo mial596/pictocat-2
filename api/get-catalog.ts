@@ -8,28 +8,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const db = await getDb();
     const catsCollection = db.collection('cats');
     
-    // MongoDB's _id is not a simple incrementing integer, so we need a different way to sort if we want that.
-    // For now, we fetch and let the frontend handle it, or sort by another field if necessary.
-    // Let's assume the frontend just needs the list. We'll rename _id to id.
-    const catsFromDb = await catsCollection.find({}).toArray();
+    // Fetch cats from the database, sorting by the stable numeric_id to ensure a consistent order.
+    const catsFromDb = await catsCollection.find({}).sort({ numeric_id: 1 }).toArray();
 
-    const catCatalog: CatImage[] = catsFromDb.map((cat, index) => ({
-      // The frontend expects a numeric ID. We can use the index for simplicity,
-      // but a dedicated numeric ID in the DB would be better long-term.
-      // For now, let's use a temporary solution. A better one would be to use `original_id` if it was numeric.
-      // Let's check the schema. `id` is a number. I'll just use the index for now.
-      id: index + 1, // This is not ideal as it's not stable. A proper migration would add a numeric id.
+    // Map the database documents to the CatImage type expected by the frontend.
+    const catCatalog: CatImage[] = catsFromDb.map(cat => ({
+      id: cat.numeric_id, // Use the stable, numeric ID for frontend operations.
       url: cat.url,
       theme: cat.theme
     }));
-    
-    // A better approach if the frontend can handle string IDs from the original data:
-    // const catCatalog = catsFromDb.map(cat => ({
-    //   id: cat.original_id, // assuming frontend can take string
-    //   url: cat.url,
-    //   theme: cat.theme
-    // }));
-    // The type `CatImage` requires `id: number`. So the above is necessary.
 
     return res.status(200).json(catCatalog);
   } catch (error) {
