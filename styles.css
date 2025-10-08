@@ -12,39 +12,39 @@
 
   --font-cartoon: 'Fredoka', sans-serif;
   --radius-cartoon: 1rem;
-  --border-cartoon: 3px solid var(--brand-liver);
-  --shadow-cartoon: 4px 4px 0px var(--brand-liver);
-  --shadow-cartoon-hover: 6px 6px 0px var(--brand-liver);
+  --border-cartoon: 2px solid var(--brand-liver);
+  --shadow-cartoon: 2px 2px 0px var(--brand-liver);
+  --shadow-cartoon-hover: 4px 4px 0px var(--brand-liver);
 }
 
 body {
   font-family: var(--font-cartoon);
-  background-color: var(--brand-wheat);
+  background-color: var(--brand-seasalt);
   color: var(--brand-liver);
   font-weight: 500;
-  /* Add a subtle grid pattern to the background */
+  /* A cleaner background */
   background-image:
-      linear-gradient(rgba(106, 74, 61, 0.07) 1px, transparent 1px),
-      linear-gradient(to right, rgba(106, 74, 61, 0.07) 1px, transparent 1px);
-  background-size: 2rem 2rem;
+      linear-gradient(rgba(106, 74, 61, 0.04) 1px, transparent 1px),
+      linear-gradient(to right, rgba(106, 74, 61, 0.04) 1px, transparent 1px);
+  background-size: 1.5rem 1.5rem;
 }
 
-/* --- New Cartoon Components --- */
+/* --- Refined Cartoon Components --- */
 
 .btn-cartoon {
-    @apply font-bold rounded-2xl transition-all duration-150 ease-in-out active:translate-y-1 active:shadow-none;
+    @apply font-bold rounded-xl transition-all duration-150 ease-in-out active:translate-y-px active:shadow-none;
     color: var(--brand-liver);
     border: var(--border-cartoon);
     box-shadow: var(--shadow-cartoon);
-    padding: 0.75rem 1.5rem;
+    padding: 0.6rem 1.25rem;
 }
 .btn-cartoon:hover {
     box-shadow: var(--shadow-cartoon-hover);
     transform: translateY(-2px);
 }
 .btn-cartoon:disabled {
-    @apply bg-slate-400 text-slate-600 cursor-not-allowed;
-    box-shadow: var(--shadow-cartoon);
+    @apply bg-slate-300 text-slate-500 cursor-not-allowed border-slate-400;
+    box-shadow: 2px 2px 0px var(--brand-liver);
     transform: translateY(0);
 }
 
@@ -73,7 +73,8 @@ body {
 
 .modal-cartoon-overlay {
     @apply fixed inset-0 flex items-center justify-center z-50 p-4;
-    background-color: rgba(106, 74, 61, 0.7); /* liver/70 */
+    background-color: rgba(106, 74, 61, 0.6); /* liver/60 */
+    backdrop-filter: blur(4px);
     animation: modal-overlay-fade-in 0.2s ease-out forwards;
 }
 
@@ -82,24 +83,24 @@ body {
     background-color: var(--brand-seasalt);
     border-radius: var(--radius-cartoon);
     border: var(--border-cartoon);
-    box-shadow: 8px 8px 0px var(--brand-liver);
+    box-shadow: 6px 6px 0px var(--brand-liver);
     animation: bounce-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
 .input-cartoon {
-    @apply w-full px-4 py-3 rounded-xl shadow-inner focus:outline-none focus:ring-4;
+    @apply w-full px-4 py-2.5 rounded-lg shadow-inner focus:outline-none focus:ring-4;
     border: var(--border-cartoon);
     background-color: #f8fafc; /* slate-50 */
     color: var(--brand-liver);
 }
 .input-cartoon:focus {
     border-color: var(--brand-buff);
-    box-shadow: inset 2px 2px 0px rgba(0,0,0,0.1);
+    box-shadow: inset 2px 2px 0px rgba(0,0,0,0.05);
     --tw-ring-color: rgba(219, 170, 116, 0.4); /* buff/40 */
 }
 
 .card-cartoon {
-    @apply rounded-2xl transition-all duration-150 ease-in-out cursor-pointer;
+    @apply rounded-xl transition-all duration-150 ease-in-out cursor-pointer;
     border: var(--border-cartoon);
     box-shadow: var(--shadow-cartoon);
     background-color: var(--brand-seasalt);
@@ -110,20 +111,35 @@ body {
 }
 
 .card-cartoon-add {
-    @apply rounded-2xl transition-all duration-150 ease-in-out cursor-pointer flex flex-col items-center justify-center gap-2;
-    border: 3px dashed rgba(106, 74, 61, 0.4);
-    background-color: rgba(250, 249, 247, 0.5);
+    @apply rounded-xl transition-all duration-150 ease-in-out cursor-pointer flex flex-col items-center justify-center gap-2;
+    border: 2px dashed rgba(106, 74, 61, 0.4);
+    background-color: rgba(219, 170, 116, 0.1); /* buff/10 */
 }
 .card-cartoon-add:hover {
     border-color: var(--brand-buff);
-    background-color: var(--brand-seasalt);
+    background-color: var(--brand-wheat);
+}
+
+/* --- New Bottom Nav Bar --- */
+.bottom-nav {
+    @apply fixed bottom-0 left-0 right-0 h-20 bg-seasalt/95 backdrop-blur-sm z-40 flex justify-around items-center;
+    border-top: 2px solid var(--brand-liver);
+}
+.bottom-nav-item {
+    @apply flex flex-col items-center justify-center gap-1 text-liver/60 transition-colors duration-200;
+}
+.bottom-nav-item.active {
+    @apply text-liver font-bold;
+}
+.bottom-nav-item.active .icon {
+    color: var(--brand-buff);
 }
 
 
 /* Animations */
 @keyframes modal-overlay-fade-in {
-  from { background-color: rgba(106, 74, 61, 0); }
-  to { background-color: rgba(106, 74, 61, 0.7); }
+  from { background-color: rgba(106, 74, 61, 0); backdrop-filter: blur(0px); }
+  to { background-color: rgba(106, 74, 61, 0.6); backdrop-filter: blur(4px); }
 }
 
 @keyframes bounce-in {
@@ -183,11 +199,11 @@ body {
 .action-button {
     @apply flex items-center gap-2 font-bold px-3 rounded-xl transition-all h-10;
     color: var(--brand-liver);
-    border: 2px solid var(--brand-liver);
-    box-shadow: 2px 2px 0px var(--brand-liver);
+    border: var(--border-cartoon);
+    box-shadow: var(--shadow-cartoon);
 }
 .action-button:hover {
-    box-shadow: 3px 3px 0px var(--brand-liver);
+    box-shadow: var(--shadow-cartoon-hover);
     @apply transform -translate-y-px;
 }
 .action-button:active {

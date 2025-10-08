@@ -38,7 +38,7 @@ const PhraseCard: React.FC<PhraseCardProps> = ({ phrase, image, onSelectImage, o
             <CatSilhouetteIcon className="w-full h-full text-wheat" />
         </div>
       )}
-      <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/80 via-black/50 to-transparent pointer-events-none"></div>
+      <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/90 via-black/60 to-transparent pointer-events-none"></div>
       <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
         <p className="font-bold text-lg drop-shadow-md text-center">{phrase.text}</p>
       </div>

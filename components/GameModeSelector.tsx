@@ -4,19 +4,14 @@ import { ArrowLeftIcon, CloseIcon, LockIcon, MouseIcon, BrainIcon, QuestionMarkI
 import { GAMES_DATA, GAME_MODES } from '../gameData.ts';
 
 interface GameModeSelectorProps {
-  isOpen: boolean;
   onSelectMode: (mode: GameMode) => void;
-  onClose: () => void;
   unlockedImagesCount: number;
 }
 
 type GameId = 'mouseHunt' | 'catMemory' | 'simonSays' | 'catTrivia' | 'felineRhythm';
 
-const GameModeSelector: React.FC<GameModeSelectorProps> = ({ isOpen, onSelectMode, onClose, unlockedImagesCount }) => {
+const GameModeSelector: React.FC<GameModeSelectorProps> = ({ onSelectMode, unlockedImagesCount }) => {
   const [selectedGame, setSelectedGame] = useState<GameId | null>(null);
-
-  // FIX: Conditionally render based on isOpen prop.
-  if (!isOpen) return null;
 
   const renderGameCard = (gameId: GameId, Icon: React.FC<{className?: string}>, color: string) => (
     <div
@@ -34,10 +29,10 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({ isOpen, onSelectMod
     if (!selectedGame) return null;
     const modes = GAME_MODES.filter(m => m.gameId === selectedGame);
     return (
-      <div className="animate-fadeIn">
+      <div className="animate-fadeIn w-full">
         <button onClick={() => setSelectedGame(null)} className="flex items-center gap-2 text-liver/70 hover:text-liver mb-4 font-bold">
           <ArrowLeftIcon className="w-5 h-5"/>
-          Volver
+          Volver a Juegos
         </button>
         <h3 className="text-3xl font-black mb-6 text-center text-liver">{GAMES_DATA[selectedGame].name}</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -81,27 +76,21 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({ isOpen, onSelectMod
   };
 
   return (
-    <div className="modal-cartoon-overlay">
-      <div className="modal-cartoon-content p-4 sm:p-6 w-full max-w-2xl relative overflow-y-auto">
-        <button onClick={onClose} className="absolute top-3 right-3 text-liver/70 hover:text-liver z-10">
-          <CloseIcon className="w-7 h-7" />
-        </button>
-        
-        {!selectedGame ? (
-          <div className="animate-fadeIn">
-            <h2 className="text-3xl sm:text-4xl font-black text-liver mb-6 text-center">Seleccionar Juego</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {renderGameCard('mouseHunt', MouseIcon, 'bg-buff')}
-              {renderGameCard('catMemory', CatSilhouetteIcon, 'bg-uranian_blue')}
-              {renderGameCard('simonSays', BrainIcon, 'bg-liver text-seasalt')}
-              {renderGameCard('catTrivia', QuestionMarkIcon, 'bg-yellow-400')}
-              {renderGameCard('felineRhythm', MusicNoteIcon, 'bg-purple-400 text-seasalt')}
-            </div>
+    <div className="w-full max-w-3xl mx-auto p-4 sm:p-6 flex flex-col items-center">
+      {!selectedGame ? (
+        <div className="animate-fadeIn text-center">
+          <h2 className="text-3xl sm:text-4xl font-black text-liver mb-6">Seleccionar Juego</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {renderGameCard('mouseHunt', MouseIcon, 'bg-buff')}
+            {renderGameCard('catMemory', CatSilhouetteIcon, 'bg-uranian_blue')}
+            {renderGameCard('simonSays', BrainIcon, 'bg-liver text-seasalt')}
+            {renderGameCard('catTrivia', QuestionMarkIcon, 'bg-yellow-400')}
+            {renderGameCard('felineRhythm', MusicNoteIcon, 'bg-purple-400 text-seasalt')}
           </div>
-        ) : (
-          renderModeSelection()
-        )}
-      </div>
+        </div>
+      ) : (
+        renderModeSelection()
+      )}
     </div>
   );
 };

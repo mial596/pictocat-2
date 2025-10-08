@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { Envelope, EnvelopeTypeId, PlayerStats, UpgradeId } from '../types.ts';
-import { CloseIcon, CoinIcon, EnvelopeIcon, LockIcon, MouseIcon, TimeIcon, StarIcon } from '../hooks/Icons.tsx';
+import { CoinIcon, EnvelopeIcon, LockIcon, MouseIcon, TimeIcon, StarIcon } from '../hooks/Icons.tsx';
 import { ENVELOPES, UPGRADES, calculateEnvelopeCost } from '../shopData.ts';
 
-interface ShopModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+interface ShopProps {
   coins: number;
   playerStats: PlayerStats;
   onPurchaseEnvelope: (envelopeId: EnvelopeTypeId) => void;
@@ -15,9 +13,7 @@ interface ShopModalProps {
 
 type Tab = 'envelopes' | 'upgrades';
 
-const ShopModal: React.FC<ShopModalProps> = ({
-  isOpen,
-  onClose,
+const ShopModal: React.FC<ShopProps> = ({
   coins,
   playerStats,
   onPurchaseEnvelope,
@@ -25,7 +21,6 @@ const ShopModal: React.FC<ShopModalProps> = ({
   purchasedUpgrades
 }) => {
   const [activeTab, setActiveTab] = useState<Tab>('envelopes');
-  if (!isOpen) return null;
 
   const renderEnvelope = (envelope: Envelope) => {
     const cost = calculateEnvelopeCost(envelope, playerStats.level);
@@ -100,22 +95,14 @@ const ShopModal: React.FC<ShopModalProps> = ({
   }
 
   return (
-    <div className="modal-cartoon-overlay">
-      <div
-        className="modal-cartoon-content p-4 sm:p-6 w-full max-w-3xl"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="shop-modal-title"
-      >
-        <header className="flex justify-between items-center mb-4 pb-4 border-b-2 border-liver/20">
-          <h2 id="shop-modal-title" className="text-3xl sm:text-4xl font-black text-liver">Tienda</h2>
-          <button onClick={onClose} className="text-liver/70 hover:text-liver">
-            <CloseIcon className="w-7 h-7" />
-          </button>
+    <div className="w-full max-w-4xl mx-auto p-4 sm:p-6">
+        <header className="text-center mb-6">
+          <h2 id="shop-title" className="text-3xl sm:text-4xl font-black text-liver">Tienda</h2>
+          <p className="text-liver/80 mt-1">¡Gasta tus monedas para obtener nuevos gatos y mejoras!</p>
         </header>
 
-        <div className="border-b-2 border-liver/20 mb-4">
-            <nav className="-mb-px flex space-x-6" role="tablist" aria-label="Categorías de la tienda">
+        <div className="border-b-2 border-liver/20 mb-4 flex justify-center">
+            <nav className="flex space-x-2 sm:space-x-6" role="tablist" aria-label="Categorías de la tienda">
                 <button
                     onClick={() => setActiveTab('envelopes')}
                     className={`${activeTab === 'envelopes' ? 'border-buff text-liver' : 'border-transparent text-liver/60 hover:text-liver hover:border-liver/30'} whitespace-nowrap py-3 px-1 border-b-4 font-bold text-lg transition-colors`}
@@ -139,7 +126,7 @@ const ShopModal: React.FC<ShopModalProps> = ({
             </nav>
         </div>
 
-        <main className="flex-grow overflow-y-auto pr-2 bg-wheat rounded-lg p-2 border-2 border-liver/20">
+        <main className="bg-wheat rounded-lg p-3 border-2 border-liver/20">
             {activeTab === 'envelopes' && (
                 <div
                     id="panel-envelopes"
@@ -161,7 +148,6 @@ const ShopModal: React.FC<ShopModalProps> = ({
                 </div>
             )}
         </main>
-      </div>
     </div>
   );
 };

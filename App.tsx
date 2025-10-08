@@ -21,6 +21,7 @@ import Toast from './components/Toast.tsx';
 import AdminPanel from './components/AdminPanel.tsx';
 import UserSearch from './components/UserSearch.tsx';
 import PublicProfile from './components/PublicProfile.tsx';
+import BottomNavBar from './components/BottomNavBar.tsx'; // New component for mobile navigation
 import { PlusIcon, CatSilhouetteIcon, SpinnerIcon } from './hooks/Icons.tsx';
 
 // Services
@@ -49,9 +50,9 @@ const App: React.FC = () => {
     const [initError, setInitError] = useState<string | null>(null);
 
     // UI State
-    type ModalType = 'shop' | 'envelope' | 'imageSelector' | 'album' | 'customPhrase' | 'games' | null;
+    type ModalType = 'envelope' | 'imageSelector' | 'album' | 'customPhrase' | null;
     const [activeModal, setActiveModal] = useState<ModalType>(null);
-    type ViewType = 'main' | 'game' | 'admin' | 'community';
+    type ViewType = 'main' | 'games' | 'shop' | 'community' | 'admin' | 'gameplay';
     const [activeView, setActiveView] = useState<ViewType>('main');
     
     const [displayedPhrase, setDisplayedPhrase] = useState<{ phrase: Phrase; image: CatImage | null } | null>(null);
@@ -96,11 +97,9 @@ const App: React.FC = () => {
         setInitError(null);
         try {
             const token = await getAccessTokenSilently();
-            // Fetch catalog first, as it's independent
             const catalog = await api.getCatCatalog();
             setCatCatalog(catalog);
 
-            // Now, fetch user profile
             const profile = await api.getUserProfile(token);
             if (profile) {
                 setUserProfile(profile);
@@ -121,7 +120,6 @@ const App: React.FC = () => {
         fetchInitialData();
     }, [fetchInitialData]);
     
-    // Polling effect for new user profile creation
     useEffect(() => {
         const stopPolling = () => {
              if (pollingIntervalRef.current) {
@@ -132,15 +130,14 @@ const App: React.FC = () => {
         }
 
         if (isAuthenticated && !userProfile && !isAuthLoading && !isAppLoading && !initError) {
-            stopPolling(); // Ensure no multiple polls are running
-            
-            pollCountRef.current = 0; // Reset counter
+            stopPolling();
+            pollCountRef.current = 0;
             console.log("User logged in, but profile is missing. Starting to poll.");
             pollingIntervalRef.current = window.setInterval(async () => {
                 pollCountRef.current += 1;
                 console.log(`Polling for user profile... (Attempt ${pollCountRef.current})`);
 
-                if (pollCountRef.current > 10) { // Max 10 attempts (30 seconds)
+                if (pollCountRef.current > 10) {
                     console.error("Polling timed out. Could not fetch user profile.");
                     setInitError("No se pudo configurar tu perfil. Por favor, intenta iniciar sesión de nuevo.");
                     stopPolling();
@@ -191,10 +188,7 @@ const App: React.FC = () => {
         });
     };
 
-    // Handlers
-    const handleDisplayPhrase = (phrase: Phrase, image: CatImage | null) => {
-        setDisplayedPhrase({ phrase, image });
-    };
+    const handleDisplayPhrase = (phrase: Phrase, image: CatImage | null) => setDisplayedPhrase({ phrase, image });
 
     const handleSelectImageForPhrase = (phraseId: string) => {
         const phrase = userProfile?.data.phrases.find(p => p.id === phraseId);
@@ -261,6 +255,7 @@ const App: React.FC = () => {
             setNewlyUnlockedImages(newImages);
             setOpenedEnvelopeName(envelope.name);
             setActiveModal('envelope');
+            setActiveView('main');
         }
     };
     
@@ -324,8 +319,7 @@ const App: React.FC = () => {
 
     const handleSelectGameMode = (mode: GameMode) => {
         setActiveGameMode(mode);
-        setActiveModal(null);
-        setActiveView('game');
+        setActiveView('gameplay');
     };
     
     const handleGameEnd = (results: { score: number, coinsEarned: number, xpEarned: number }) => {
@@ -344,7 +338,7 @@ const App: React.FC = () => {
             }
         });
         setActiveGameMode(null);
-        setActiveView('main');
+        setActiveView('games');
     };
 
     const handleSelectUser = async (username: string) => {
@@ -370,9 +364,8 @@ const App: React.FC = () => {
         setProfileError('');
     };
     
-    // Render Logic
     if (isAuthLoading || isAppLoading) {
-        return <div className="fixed inset-0 flex items-center justify-center text-2xl font-bold text-liver">Cargando...</div>;
+        return <div className="fixed inset-0 flex items-center justify-center text-2xl font-bold text-liver bg-seasalt">Cargando...</div>;
     }
     
     if (initError) {
@@ -396,7 +389,7 @@ const App: React.FC = () => {
 
     if (!userProfile) {
         return (
-            <div className="fixed inset-0 flex flex-col items-center justify-center p-4 bg-wheat">
+            <div className="fixed inset-0 flex flex-col items-center justify-center p-4 bg-seasalt">
                  <div className="text-center">
                     <SpinnerIcon className="w-12 h-12 animate-spin text-liver mx-auto" />
                     <h1 className="text-2xl font-bold text-liver mt-4">Configurando tu cuenta...</h1>
@@ -426,24 +419,23 @@ const App: React.FC = () => {
     
     const renderView = () => {
         switch(activeView) {
-            case 'game':
-                return (
-                    <div className="flex-grow flex items-center justify-center p-4">
-                        {renderGame()}
-                    </div>
-                );
-            case 'admin':
-                return <AdminPanel />;
+            case 'gameplay':
+                return <div className="flex-grow flex items-center justify-center p-4">{renderGame()}</div>;
+            case 'games':
+                return <GameModeSelector onSelectMode={handleSelectGameMode} unlockedImagesCount={unlockedImages.length} />;
+            case 'shop':
+                return <ShopModal coins={userProfile.data.coins} playerStats={userProfile.data.playerStats} onPurchaseEnvelope={handlePurchaseEnvelope} onPurchaseUpgrade={handlePurchaseUpgrade} purchasedUpgrades={purchasedUpgrades} />;
             case 'community':
                 if (viewingUsername) {
                     return <PublicProfile profileData={publicProfileData} error={profileError} onBack={handleBackToSearch} />;
-                } else {
-                    return <UserSearch onSelectUser={handleSelectUser} />;
                 }
+                return <UserSearch onSelectUser={handleSelectUser} />;
+            case 'admin':
+                return <AdminPanel />;
             case 'main':
             default:
                 return (
-                     <main className="flex-grow p-4 md:p-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                     <main className="p-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
                         {userProfile.data.phrases.map(phrase => (
                             <PhraseCard
                                 key={phrase.id}
@@ -463,33 +455,29 @@ const App: React.FC = () => {
                             <span className="font-bold text-liver/50 group-hover:text-liver transition-colors">Nueva Frase</span>
                         </button>
                     </main>
-                )
+                );
         }
     }
 
     return (
-        <div className="flex flex-col min-h-screen pt-20">
+        <div className="flex flex-col min-h-screen bg-seasalt pt-20 pb-20 md:pb-0">
             <Header
                 coins={userProfile.data.coins}
                 playerLevel={userProfile.data.playerStats.level}
                 playerXp={userProfile.data.playerStats.xp}
                 xpToNextLevel={userProfile.data.playerStats.xpToNextLevel}
-                onOpenShop={() => setActiveModal('shop')}
-                onOpenGames={() => setActiveModal('games')}
-                onOpenAdmin={() => { setActiveView('admin'); setActiveModal(null); }}
-                onOpenCommunity={() => { setActiveView('community'); handleBackToSearch(); setActiveModal(null); }}
-                onGoToMain={() => setActiveView('main')}
+                onNavigate={setActiveView}
                 currentUser={userProfile.email}
                 onLogout={handleLogout}
                 isAdmin={userProfile.role === 'admin'}
                 activeView={activeView}
             />
 
-            {renderView()}
+            <div className="flex-grow">
+              {renderView()}
+            </div>
             
-            <button onClick={() => setActiveModal('album')} className="fixed bottom-4 right-4 bg-uranian_blue text-liver p-4 rounded-full shadow-lg border-4 border-liver z-30 transform hover:scale-110 transition-transform">
-                <CatSilhouetteIcon className="w-8 h-8"/>
-            </button>
+            <BottomNavBar activeView={activeView} onNavigate={setActiveView} onOpenAlbum={() => setActiveModal('album')} />
 
             {/* Modals */}
             {displayedPhrase && (
@@ -505,15 +493,6 @@ const App: React.FC = () => {
                 onSelectImage={handleSaveImageSelection}
                 phrase={phraseToSelectImageFor}
                 unlockedImages={unlockedImages}
-            />
-            <ShopModal
-                isOpen={activeModal === 'shop'}
-                onClose={() => setActiveModal(null)}
-                coins={userProfile.data.coins}
-                playerStats={userProfile.data.playerStats}
-                onPurchaseEnvelope={handlePurchaseEnvelope}
-                onPurchaseUpgrade={handlePurchaseUpgrade}
-                purchasedUpgrades={purchasedUpgrades}
             />
             <EnvelopeModal
                 isOpen={activeModal === 'envelope'}
@@ -533,12 +512,6 @@ const App: React.FC = () => {
                 onDelete={handleDeleteCustomPhrase}
                 phraseToEdit={phraseToEdit}
                 unlockedImages={unlockedImages}
-            />
-             <GameModeSelector
-                isOpen={activeModal === 'games'}
-                onClose={() => setActiveModal(null)}
-                onSelectMode={handleSelectGameMode}
-                unlockedImagesCount={unlockedImages.length}
             />
             
             {toastMessage && <Toast message={toastMessage} onClose={() => setToastMessage('')} />}
