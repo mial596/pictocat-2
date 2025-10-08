@@ -1,7 +1,7 @@
 // api/seed-database.ts
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { getDb } from './_utils/mongodb';
-import { MASTER_IMAGE_CATALOG_DATA } from './_shared/catalog-data';
+import { getDb } from './_utils/mongodb.ts';
+import { MASTER_IMAGE_CATALOG_DATA } from './_shared/catalog-data.ts';
 
 interface CatImageSeed {
   id: string;

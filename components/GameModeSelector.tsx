@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { GameMode, CatMemoryMode, CatTriviaMode } from '../types.ts';
-import { ArrowLeftIcon, CloseIcon, LockIcon, MouseIcon, BrainIcon, QuestionMarkIcon, CatSilhouetteIcon } from '../hooks/Icons.tsx';
+import { ArrowLeftIcon, CloseIcon, LockIcon, MouseIcon, BrainIcon, QuestionMarkIcon, CatSilhouetteIcon, MusicNoteIcon } from '../hooks/Icons.tsx';
 import { GAMES_DATA, GAME_MODES } from '../gameData.ts';
 
 interface GameModeSelectorProps {
@@ -10,7 +10,7 @@ interface GameModeSelectorProps {
   unlockedImagesCount: number;
 }
 
-type GameId = 'mouseHunt' | 'catMemory' | 'simonSays' | 'catTrivia';
+type GameId = 'mouseHunt' | 'catMemory' | 'simonSays' | 'catTrivia' | 'felineRhythm';
 
 const GameModeSelector: React.FC<GameModeSelectorProps> = ({ isOpen, onSelectMode, onClose, unlockedImagesCount }) => {
   const [selectedGame, setSelectedGame] = useState<GameId | null>(null);
@@ -95,6 +95,7 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({ isOpen, onSelectMod
               {renderGameCard('catMemory', CatSilhouetteIcon, 'bg-uranian_blue')}
               {renderGameCard('simonSays', BrainIcon, 'bg-liver text-seasalt')}
               {renderGameCard('catTrivia', QuestionMarkIcon, 'bg-yellow-400')}
+              {renderGameCard('felineRhythm', MusicNoteIcon, 'bg-purple-400 text-seasalt')}
             </div>
           </div>
         ) : (

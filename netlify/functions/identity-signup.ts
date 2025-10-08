@@ -1,7 +1,7 @@
 // netlify/functions/identity-signup.ts
 import { Handler } from '@netlify/functions';
-import getDb from './db';
-import { getInitialUserData } from './_shared/data';
+import getDb from './db.ts';
+import { getInitialUserData } from './_shared/data.ts';
 
 export const handler: Handler = async (event) => {
   if (!event.body) {

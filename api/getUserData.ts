@@ -1,9 +1,9 @@
 // api/getUserData.ts
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { getDb } from './_utils/mongodb';
-import { getInitialUserData } from './_shared/data';
-import { verifyToken } from './_utils/auth';
-import { UserProfile } from '../types';
+import { getDb } from './_utils/mongodb.ts';
+import { getInitialUserData } from './_shared/data.ts';
+import { verifyToken } from './_utils/auth.ts';
+import { UserProfile } from '../types.ts';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') {

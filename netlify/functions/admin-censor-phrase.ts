@@ -1,6 +1,6 @@
 // netlify/functions/admin-censor-phrase.ts
 import { Handler, HandlerContext } from '@netlify/functions';
-import getDb from './db';
+import getDb from './db.ts';
 import { ObjectId } from 'mongodb';
 
 export const handler: Handler = async (event, context: HandlerContext) => {

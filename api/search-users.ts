@@ -1,7 +1,7 @@
 // api/search-users.ts
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { getDb } from './_utils/mongodb';
-import { verifyToken } from './_utils/auth';
+import { getDb } from './_utils/mongodb.ts';
+import { verifyToken } from './_utils/auth.ts';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {

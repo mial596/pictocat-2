@@ -6,6 +6,7 @@ export interface Phrase {
   text: string;
   selectedImageId: number | null;
   isCustom?: boolean;
+  isPublic?: boolean;
 }
 
 export interface PlayerStats {
@@ -26,11 +27,11 @@ export interface UserData {
 
 // Backend constants
 const INITIAL_PHRASES: Phrase[] = [
-  { id: 'yes', text: 'Sí', selectedImageId: null, isCustom: false },
-  { id: 'no', text: 'No', selectedImageId: null, isCustom: false },
-  { id: 'happy', text: 'Me siento feliz', selectedImageId: null, isCustom: false },
-  { id: 'sad', text: 'Me siento triste', selectedImageId: null, isCustom: false },
-  { id: 'help', text: 'Necesito ayuda', selectedImageId: null, isCustom: false }
+  { id: 'yes', text: 'Sí', selectedImageId: null, isCustom: false, isPublic: false },
+  { id: 'no', text: 'No', selectedImageId: null, isCustom: false, isPublic: false },
+  { id: 'happy', text: 'Me siento feliz', selectedImageId: null, isCustom: false, isPublic: false },
+  { id: 'sad', text: 'Me siento triste', selectedImageId: null, isCustom: false, isPublic: false },
+  { id: 'help', text: 'Necesito ayuda', selectedImageId: null, isCustom: false, isPublic: false }
 ];
 
 const INITIAL_UNLOCKED_IMAGE_IDS: number[] = [];

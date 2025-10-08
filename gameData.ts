@@ -16,6 +16,10 @@ export const GAMES_DATA: Record<string, {name: string, description: string}> = {
   catTrivia: {
     name: 'Triviatos',
     description: '¿Cuánto sabes sobre tu colección de gatos?'
+  },
+  felineRhythm: {
+    name: 'Ritmo Felino',
+    description: '¡Sigue el ritmo y no falles ninguna nota musical!'
   }
 };
 
@@ -138,5 +142,15 @@ export const GAME_MODES: GameMode[] = [
     rewardPerCorrect: 15,
     minImagesRequired: 8,
     description: "10 preguntas rápidas. ¡Demuestra tu conocimiento!"
+  },
+  // --- Feline Rhythm Modes ---
+  {
+    gameId: 'felineRhythm',
+    id: 'felineRhythm-normal',
+    name: 'Normal',
+    gameDuration: 60,
+    noteCount: 50,
+    rewardMultiplier: 2,
+    description: 'Un ritmo pegadizo para probar tus reflejos.'
   }
 ];

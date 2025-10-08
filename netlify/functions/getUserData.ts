@@ -1,8 +1,8 @@
 // netlify/functions/getUserData.ts
 import { Handler, HandlerContext } from '@netlify/functions';
-import getDb from './db';
-import { getInitialUserData } from './_shared/data';
-import { UserProfile } from '../../types';
+import getDb from './db.ts';
+import { getInitialUserData } from './_shared/data.ts';
+import { UserProfile } from '../../types.ts';
 
 export const handler: Handler = async (event, context: HandlerContext) => {
   if (event.httpMethod !== 'GET') {

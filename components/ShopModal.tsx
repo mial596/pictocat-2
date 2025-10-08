@@ -101,20 +101,39 @@ const ShopModal: React.FC<ShopModalProps> = ({
 
   return (
     <div className="modal-cartoon-overlay">
-      <div className="modal-cartoon-content p-4 sm:p-6 w-full max-w-3xl">
+      <div
+        className="modal-cartoon-content p-4 sm:p-6 w-full max-w-3xl"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="shop-modal-title"
+      >
         <header className="flex justify-between items-center mb-4 pb-4 border-b-2 border-liver/20">
-          <h2 className="text-3xl sm:text-4xl font-black text-liver">Tienda</h2>
+          <h2 id="shop-modal-title" className="text-3xl sm:text-4xl font-black text-liver">Tienda</h2>
           <button onClick={onClose} className="text-liver/70 hover:text-liver">
             <CloseIcon className="w-7 h-7" />
           </button>
         </header>
 
         <div className="border-b-2 border-liver/20 mb-4">
-            <nav className="-mb-px flex space-x-6" aria-label="Tabs">
-                <button onClick={() => setActiveTab('envelopes')} className={`${activeTab === 'envelopes' ? 'border-buff text-liver' : 'border-transparent text-liver/60 hover:text-liver hover:border-liver/30'} whitespace-nowrap py-3 px-1 border-b-4 font-bold text-lg transition-colors`}>
+            <nav className="-mb-px flex space-x-6" role="tablist" aria-label="Categorías de la tienda">
+                <button
+                    onClick={() => setActiveTab('envelopes')}
+                    className={`${activeTab === 'envelopes' ? 'border-buff text-liver' : 'border-transparent text-liver/60 hover:text-liver hover:border-liver/30'} whitespace-nowrap py-3 px-1 border-b-4 font-bold text-lg transition-colors`}
+                    role="tab"
+                    id="tab-envelopes"
+                    aria-selected={activeTab === 'envelopes'}
+                    aria-controls="panel-envelopes"
+                >
                     Sobres de Gatos
                 </button>
-                 <button onClick={() => setActiveTab('upgrades')} className={`${activeTab === 'upgrades' ? 'border-buff text-liver' : 'border-transparent text-liver/60 hover:text-liver hover:border-liver/30'} whitespace-nowrap py-3 px-1 border-b-4 font-bold text-lg transition-colors`}>
+                 <button
+                    onClick={() => setActiveTab('upgrades')}
+                    className={`${activeTab === 'upgrades' ? 'border-buff text-liver' : 'border-transparent text-liver/60 hover:text-liver hover:border-liver/30'} whitespace-nowrap py-3 px-1 border-b-4 font-bold text-lg transition-colors`}
+                    role="tab"
+                    id="tab-upgrades"
+                    aria-selected={activeTab === 'upgrades'}
+                    aria-controls="panel-upgrades"
+                 >
                     Mejoras
                 </button>
             </nav>
@@ -122,12 +141,22 @@ const ShopModal: React.FC<ShopModalProps> = ({
 
         <main className="flex-grow overflow-y-auto pr-2 bg-wheat rounded-lg p-2 border-2 border-liver/20">
             {activeTab === 'envelopes' && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                <div
+                    id="panel-envelopes"
+                    role="tabpanel"
+                    aria-labelledby="tab-envelopes"
+                    className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"
+                >
                     {Object.values(ENVELOPES).map(renderEnvelope)}
                 </div>
             )}
              {activeTab === 'upgrades' && (
-                <div className="flex flex-col gap-4">
+                <div
+                    id="panel-upgrades"
+                    role="tabpanel"
+                    aria-labelledby="tab-upgrades"
+                    className="flex flex-col gap-4"
+                >
                     {Object.values(UPGRADES).map(renderUpgrade)}
                 </div>
             )}

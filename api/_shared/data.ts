@@ -1,5 +1,5 @@
 // api/_shared/data.ts
-import { Phrase, PlayerStats, UpgradeId, UserData } from '../../types';
+import { Phrase, PlayerStats, UpgradeId, UserData } from '../../types.ts';
 
 // Backend constants
 const INITIAL_PHRASES: Phrase[] = [

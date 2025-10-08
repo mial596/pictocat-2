@@ -1,6 +1,6 @@
 // netlify/functions/get-public-profile.ts
 import { Handler, HandlerContext } from '@netlify/functions';
-import getDb from './db';
+import getDb from './db.ts';
 
 export const handler: Handler = async (event, context: HandlerContext) => {
   const { user } = context.clientContext;

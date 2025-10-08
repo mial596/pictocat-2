@@ -44,7 +44,9 @@ const App: React.FC = () => {
     const [isAppLoading, setIsAppLoading] = useState(true);
     const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
     const pollingIntervalRef = useRef<number | null>(null);
+    const pollCountRef = useRef(0);
     const [catCatalog, setCatCatalog] = useState<CatImage[]>([]);
+    const [initError, setInitError] = useState<string | null>(null);
 
     // UI State
     type ModalType = 'shop' | 'envelope' | 'imageSelector' | 'album' | 'customPhrase' | 'games' | null;
@@ -86,6 +88,7 @@ const App: React.FC = () => {
             return;
         }
         setIsAppLoading(true);
+        setInitError(null);
         try {
             const token = await getAccessTokenSilently();
             // Fetch catalog first, as it's independent
@@ -101,6 +104,7 @@ const App: React.FC = () => {
             }
         } catch (error) {
             console.error("Failed to fetch initial data.", error);
+            setInitError("No se pudieron cargar tus datos. Por favor, intenta refrescar la página o inicia sesión de nuevo.");
             setToastMessage('Error al cargar datos iniciales.');
         } finally {
             setIsAppLoading(false);
@@ -114,33 +118,48 @@ const App: React.FC = () => {
     
     // Polling effect for new user profile creation
     useEffect(() => {
-        if (isAuthenticated && !userProfile && !isAuthLoading && !isAppLoading) {
-            if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
+        const stopPolling = () => {
+             if (pollingIntervalRef.current) {
+                console.log("Stopping polling.");
+                clearInterval(pollingIntervalRef.current);
+                pollingIntervalRef.current = null;
+            }
+        }
+
+        if (isAuthenticated && !userProfile && !isAuthLoading && !isAppLoading && !initError) {
+            stopPolling(); // Ensure no multiple polls are running
             
+            pollCountRef.current = 0; // Reset counter
             console.log("User logged in, but profile is missing. Starting to poll.");
             pollingIntervalRef.current = window.setInterval(async () => {
-                console.log("Polling for user profile...");
+                pollCountRef.current += 1;
+                console.log(`Polling for user profile... (Attempt ${pollCountRef.current})`);
+
+                if (pollCountRef.current > 10) { // Max 10 attempts (30 seconds)
+                    console.error("Polling timed out. Could not fetch user profile.");
+                    setInitError("No se pudo configurar tu perfil. Por favor, intenta iniciar sesión de nuevo.");
+                    stopPolling();
+                    return;
+                }
+
                 try {
                     const token = await getAccessTokenSilently();
                     const profile = await api.getUserProfile(token);
                     if (profile) {
                         console.log("Profile found!");
                         setUserProfile(profile);
+                        stopPolling();
                     }
                 } catch (error) {
                     console.error("Polling error:", error);
+                    setInitError("Hubo un problema al configurar tu cuenta. Por favor, intenta iniciar sesión de nuevo.");
+                    stopPolling();
                 }
             }, 3000);
         }
 
-        return () => {
-            if (pollingIntervalRef.current) {
-                console.log("Stopping polling.");
-                clearInterval(pollingIntervalRef.current);
-                pollingIntervalRef.current = null;
-            }
-        };
-    }, [isAuthenticated, userProfile, isAuthLoading, isAppLoading, getAccessTokenSilently]);
+        return stopPolling;
+    }, [isAuthenticated, userProfile, isAuthLoading, isAppLoading, getAccessTokenSilently, initError]);
 
     const saveProfileData = useCallback(async (data: UserData) => {
         try {
@@ -351,6 +370,21 @@ const App: React.FC = () => {
         return <div className="fixed inset-0 flex items-center justify-center text-2xl font-bold text-liver">Cargando...</div>;
     }
     
+    if (initError) {
+        return (
+            <div className="fixed inset-0 flex flex-col items-center justify-center p-4 bg-wheat text-center">
+                <h1 className="text-2xl font-bold text-liver mb-4">¡Oops! Algo salió mal</h1>
+                <p className="text-liver/80 mb-6 max-w-md">{initError}</p>
+                <button
+                    onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
+                    className="btn-cartoon btn-cartoon-danger"
+                >
+                    Cerrar Sesión
+                </button>
+            </div>
+        );
+    }
+
     if (!isAuthenticated) {
         return <Auth />;
     }

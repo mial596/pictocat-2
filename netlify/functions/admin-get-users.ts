@@ -1,6 +1,6 @@
 // netlify/functions/admin-get-users.ts
 import { Handler, HandlerContext } from '@netlify/functions';
-import getDb from './db';
+import getDb from './db.ts';
 
 export const handler: Handler = async (event, context: HandlerContext) => {
     const { user } = context.clientContext;
